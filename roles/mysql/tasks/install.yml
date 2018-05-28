@@ -1,0 +1,12 @@
+---
+ # install mysql core
+ - name: install mysql-server
+   apt: name=mysql-server state=latest
+ 
+ - name: install mysql-client     
+   apt: name=mysql-client state=latest
+
+ - name: install python mysql bindings
+   apt: name=python3-mysqldb state=latest
+ 
+

@@ -1,0 +1,4 @@
+---
+# handlers file for backend
+ -  name: service apache restart
+    service: name=apache2 state=restarted

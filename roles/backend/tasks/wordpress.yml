@@ -1,0 +1,62 @@
+---
+ - name: VARS
+   include_vars: ../../../vars.yml 
+ 
+ - name: Install WP-CLI
+   get_url:
+    url: "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
+    dest: /usr/bin/wp
+    mode: 0755
+
+ - name: download wordpress
+   get_url:
+    url: "https://wordpress.org/latest.tar.gz"
+    dest: "/tmp/latest.tar.gz"
+
+ - name: Extract WordPress
+   unarchive:
+     src=/tmp/latest.tar.gz
+     dest=/var/www/html/
+     copy=no
+
+ - name: Copy sample config file
+   command: mv /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php creates=/var/www/html/wordpress/wp-config.php
+
+ - name: Update WordPress config file
+   lineinfile:
+     dest=/var/www/html/wordpress/wp-config.php
+     regexp="{{ item.regexp }}"
+     line="{{ item.line }}"
+   with_items:
+     - {'regexp': "define\\('DB_NAME', '(.)+'\\);", 'line': "define('DB_NAME', '{{ wordpress_db }}');"}
+     - {'regexp': "define\\('DB_USER', '(.)+'\\);", 'line': "define('DB_USER', '{{ wordpress_db_user }}');"}
+     - {'regexp': "define\\('DB_PASSWORD', '(.)+'\\);", 'line': "define('DB_PASSWORD', '{{ wordpress_db_password }}');"}
+     - {'regexp': "define\\('DB_HOST', '(.)+'\\);", 'line': "define('DB_HOST', '{{ wordpress_localhost }}');"}
+
+ - name: Update default Apache site
+   become: yes
+   lineinfile:
+     dest=/etc/apache2/sites-enabled/000-default.conf
+     regexp="(.)+DocumentRoot /var/www/html"
+     line="DocumentRoot /var/www/html/wordpress"
+   notify:
+     - service apache restart
+
+ - name: Install WordPress
+   become: yes
+   command: wp core install --path=/var/www/html/wordpress --url="{{ wordpress_url }}"  --title="{{ wordpress_title }}" --admin_user="{{ wordpress_user }}" --admin_password="{{ wordpress_password }}" --admin_email="{{ wordpress_user_email }}" --allow-root
+ 
+ - name: Add User2
+   become: yes
+   command: wp user create --path=/var/www/html/wordpress "{{ wordpress_user2 }}" "{{ wordpress_user_email2}}" --role="administrator" --user_pass="{{ wordpress_password2}}" --allow-root
+
+ - name: Add User3
+   become: yes
+   command: wp user create --path=/var/www/html/wordpress "{{ wordpress_user3 }}" "{{ wordpress_user_email3}}" --role="administrator" --user_pass="{{ wordpress_password3}}" --allow-root
+
+ - name: Change owner for Wordpress to be www-data user group
+   command: chown www-data:www-data -R /var/www/html
+   notify:
+     - service apache restart
+
+

@@ -1,0 +1,19 @@
+---
+ - name: frontend-server
+   hosts: frontend
+   become: yes
+   roles:
+        - frontend
+
+ - name: mysql-server
+   hosts: mysql
+   become: yes
+   roles:
+        - mysql
+
+ - name: Apache+Wordpress
+   hosts: backend
+   become: yes
+   roles:
+        - backend
+

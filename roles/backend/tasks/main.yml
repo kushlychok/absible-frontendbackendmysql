@@ -1,0 +1,5 @@
+---
+# tasks file for backend
+- include: install.yml
+- include: services.yml
+- include: wordpress.yml

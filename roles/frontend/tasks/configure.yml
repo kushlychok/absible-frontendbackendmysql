@@ -1,0 +1,20 @@
+---
+ - name: VARS
+   include_vars: ../../../vars.yml
+
+ - name: copy
+   file: path=/var/cache/nginx state=directory 
+    
+ - name: configure nginx part
+   copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+   notify: restart nginx service
+ 
+ - name: Update nginx.conf file
+   become: yes
+   lineinfile:
+     dest=/etc/nginx/nginx.conf
+     regexp="(.)+server yourip;"
+     line="server '{{ipbackend}}';"
+   notify:
+     - restart nginx service
+

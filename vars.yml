@@ -1,0 +1,23 @@
+---
+ #Servers IP
+ ipfrontend: <your ip or domain name>
+ ipbackend: <your ip or domain name>
+ ipmysql: <your ip or domain name>
+ 
+ #Wordpress and mysql configuration
+ wordpress_url: "{{ipfrontend}}" #ipfrontendserver
+ wordpress_user: admin
+ wordpress_user_email: admin@examle.xom
+ wordpress_password: root123456789!
+ wordpress_user2: admin2
+ wordpress_user_email2: admin2@example.com
+ wordpress_password2: root123456789!
+ wordpress_user3: admin3
+ wordpress_user_email3: admin3@examle.com
+ wordpress_password3: root123456789!
+ wordpress_title: TEST
+ wordpress_db: wordpress
+ wordpress_db_user: wordpress
+ wordpress_db_password: wordpress
+ wordpress_localhost: "{{ipmysql}}" #databaseserver
+
