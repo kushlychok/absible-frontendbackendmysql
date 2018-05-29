@@ -3,9 +3,9 @@
 Change data in file "vars.yml"
 1) Servers IP
  
- ipfrontend:<your ip or domain name>
+ ipfrontend: your ip or domain name
  
- ipbackend:<your ip or domain name>
+ ipbackend: your ip or domain name
  
  ipmysql:<your ip or domain name>
 
